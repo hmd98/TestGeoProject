@@ -1,0 +1,5 @@
+/.geo
+*.log
+*.pot
+*.pyc
+__pycache__
