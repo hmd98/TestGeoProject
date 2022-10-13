@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
+    'rest_framework',
     'Tsys',
 ]
 
@@ -80,7 +81,7 @@ DATABASES = {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'transport',
         'USER': 'myuser',
-        'PASSWORD': '1234'
+        'PASSWORD': '1234',
     },
 }
 

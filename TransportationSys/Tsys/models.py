@@ -5,20 +5,20 @@ from django.contrib.gis.db import models
 
 class Owner(models.Model):
     name = models.CharField(max_length=255)
-    national_code = models.IntegerField()
+    national_code = models.BigIntegerField()
     age = models.IntegerField()
     total_toll_paid = models.IntegerField()
 
 class Car(models.Model):
     CHOICES = [
-        ('Big', 'big'),
-        ('Small', 'small')
+        ('big', 'Big'),
+        ('small', 'Small')
     ]
-    type = models.CharField(choices=CHOICES)
-    color = models.CharField()
+    type = models.CharField(choices=CHOICES, max_length=5)
+    color = models.CharField(max_length=255)
     length = models.FloatField()
-    load_valume = models.FloatField()
-    owner = models.ForeignKey(Owner, related_name='ownerCar')
+    load_valume = models.FloatField(null=True)
+    owner = models.ForeignKey(Owner, on_delete=models.CASCADE, related_name='ownerCar')
 
 
 class Roads(models.Model):
