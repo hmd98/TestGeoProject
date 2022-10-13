@@ -1,6 +1,6 @@
 from dataclasses import fields
 from rest_framework import serializers
-from .models import Car, Owner
+from .models import Car, Owner, Roads, AllNodes
 
 class CarSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField()
@@ -21,3 +21,14 @@ class OwnerSerializer(serializers.ModelSerializer):
         for car in car_data:
             Car.objects.create(owner=owner, **car)
         return owner
+
+class AllNodesSeializer(serializers.ModelSerializer):
+    class Meta:
+        model = AllNodes
+        fields = ('car', 'location', 'date')
+
+
+class RoadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Roads
+        fields = ('name', 'width', 'geom')

@@ -22,7 +22,7 @@ class Car(models.Model):
 
 
 class Roads(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, null=True)
     width = models.FloatField()
     geom = models.MultiLineStringField(srid=4326)
 
