@@ -4,11 +4,16 @@ from .models import Car, Owner
 from .serializers import CarSerializer, OwnerSerializer
 # Create your views here.
 
-class RedAndBlue(ListAPIView):
+class Cars(ListAPIView):
     model = Car
     serializer_class = CarSerializer
+
     def get_queryset(self):
-        return Car.objects.filter(Q(color = 'blue') | Q(color = 'red'))
+        mode = self.kwargs['mode']
+        if mode == 'red&blue': query = Car.objects.filter(Q(color = 'blue') | Q(color = 'red'))
+        elif mode == 'oldowner': query = Car.objects.filter(owner__age__gt=70)
+        else : query = Car.objects.all()
+        return  query 
 
 class OwnerRegister(CreateAPIView):
     model = Owner
