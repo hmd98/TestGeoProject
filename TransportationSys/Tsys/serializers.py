@@ -22,6 +22,14 @@ class OwnerSerializer(serializers.ModelSerializer):
             Car.objects.create(owner=owner, **car)
         return owner
 
+    def validate_ownerCar(self, value):
+        counter = 0
+        for car in value:
+            if car["type"] == "big": counter += 1
+        if counter > 1 :
+            raise serializers.ValidationError('Can`t have more than one big car')
+        return value
+
 class AllNodesSeializer(serializers.ModelSerializer):
     class Meta:
         model = AllNodes
