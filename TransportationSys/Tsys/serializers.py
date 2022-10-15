@@ -1,6 +1,9 @@
-from dataclasses import fields
+from contextlib import nullcontext
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from .models import Car, Owner, Roads, AllNodes
+from django.contrib.gis.geos import Point, MultiLineString, fromstr
+from django.core.exceptions import MultipleObjectsReturned
 
 class CarSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField()
@@ -30,13 +33,36 @@ class OwnerSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Can`t have more than one big car')
         return value
 
-class AllNodesSeializer(serializers.ModelSerializer):
-    class Meta:
-        model = AllNodes
-        fields = ('car', 'location', 'date')
-
-
 class RoadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Roads
         fields = ('name', 'width', 'geom')
+
+class AllNodesSeializer(serializers.ModelSerializer):
+    class Meta:
+        model = AllNodes
+        fields = ('car', 'location', 'date', 'road')
+
+    def create(self, validated_data):
+        point = fromstr(validated_data['location'])
+        try:
+            rd = Roads.objects.get(geom__contains=point)
+            print(rd)
+            
+        except Roads.DoesNotExist :
+            rd = None
+        except MultipleObjectsReturned:
+            rd = None
+            
+        validated_data['road'] = rd
+        return AllNodes.objects.create(**validated_data)
+            
+        
+        # try:
+        #     road = Roads.objects.get(geom__contains=point)
+        #     print(len(road))
+        #     return AllNodes.objects.create(road=road, **validated_data)
+        # except:
+        #     #road = nullcontext
+        #     return AllNodes.objects.create(road=None, **validated_data)
+

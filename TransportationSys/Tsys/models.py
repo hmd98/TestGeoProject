@@ -24,7 +24,7 @@ class Car(models.Model):
 class Roads(models.Model):
     name = models.CharField(max_length=255, null=True)
     width = models.FloatField()
-    geom = models.MultiLineStringField(srid=4326)
+    geom = models.MultiLineStringField(srid=4326, unique=True)
 
 class TollStation(models.Model):
     name = models.CharField(max_length=255)
@@ -35,3 +35,4 @@ class AllNodes(models.Model):
     car = models.ForeignKey(Car, on_delete=models.CASCADE)
     location = models.PointField(srid=4326)
     date = models.DateTimeField()
+    road = models.ForeignKey(Roads, on_delete=models.DO_NOTHING, null=True) 
