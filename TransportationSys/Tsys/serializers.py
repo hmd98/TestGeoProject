@@ -1,8 +1,6 @@
-from contextlib import nullcontext
-from django.shortcuts import get_object_or_404
 from rest_framework import serializers
-from .models import Car, Owner, Roads, AllNodes
-from django.contrib.gis.geos import Point, MultiLineString, fromstr
+from .models import Car, Owner, Roads, AllNodes, TollStation
+from django.contrib.gis.geos import fromstr
 from django.core.exceptions import MultipleObjectsReturned
 
 class CarSerializer(serializers.ModelSerializer):
@@ -56,13 +54,8 @@ class AllNodesSeializer(serializers.ModelSerializer):
             
         validated_data['road'] = rd
         return AllNodes.objects.create(**validated_data)
-            
-        
-        # try:
-        #     road = Roads.objects.get(geom__contains=point)
-        #     print(len(road))
-        #     return AllNodes.objects.create(road=road, **validated_data)
-        # except:
-        #     #road = nullcontext
-        #     return AllNodes.objects.create(road=None, **validated_data)
-
+              
+class TollStationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TollStation
+        fields = ('name', 'toll_per_cross', 'location')
