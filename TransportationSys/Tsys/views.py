@@ -13,6 +13,11 @@ class Cars(ListAPIView):
         mode = self.kwargs['mode']
         if mode == 'red&blue': query = Car.objects.filter(Q(color = 'blue') | Q(color = 'red'))
         elif mode == 'oldowner': query = Car.objects.filter(owner__age__gt=70)
+        elif mode == 'illegaltraffic':
+            AllNodes.objects.select_related('car', 'road')
+            cars = list(AllNodes.objects.filter(Q(road__width__lt=20) & Q(car__type='big')).distinct('car').values_list('car', flat=True))
+            print(cars)
+            query = Car.objects.filter(pk__in=cars)
         else : query = Car.objects.all()
         return  query 
 
@@ -41,7 +46,6 @@ class RoadsView(ListCreateAPIView):
             kwargs['many'] = True
         return super().get_serializer(*args, **kwargs)
 
-# # 
 class IllegalTraffic(ListAPIView):
     model = AllNodes
     serializer_class = AllNodesSeializer
